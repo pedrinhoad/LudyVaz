@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mensagem Especial</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #D5006D, #6A1B9A);
+            color: #ffffff;
+            text-align: center;
+            padding: 20px;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+        }
+        .hidden {
+            display: none;
+        }
+        h1 {
+            font-size: 2.5em;
+            margin-bottom: 20px;
+        }
+        .container {
+            max-height: 100vh; /* Altura máxima para a rolagem */
+            overflow-y: auto; /* Permitir rolagem vertical */
+            width: 100%; /* Largura total */
+        }
+        .mensagem {
+            font-size: 1.5em;
+            margin: 20px 0;
+            opacity: 0;
+            transition: opacity 1s ease-in-out;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+            line-height: 1.5;
+            animation: fadeIn 1s forwards;
+            padding: 10px; /* Espaçamento interno */
+            border: 1px solid #ffffff; /* Borda para destacar */
+            border-radius: 10px; /* Borda arredondada */
+        }
+        .carrossel {
+            position: relative;
+            width: 90%;
+            max-width: 350px;
+            margin: 20px auto;
+            overflow: hidden;
+            border-radius: 10px;
+            box-shadow: 0 8px 16px rgba(0,0,0,0.3);
+        }
+        .fotos {
+            display: flex;
+            transition: transform 0.5s ease-in-out;
+        }
+        .fotos img {
+            width: 100%;
+            height: auto;
+            max-height: 250px;
+            object-fit: cover;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        }
+        button {
+            background-color: #D5006D;
+            color: #ffffff;
+            border: none;
+            padding: 15px 30px;
+            font-size: 1em;
+            cursor: pointer;
+            border-radius: 5px;
+            transition: background-color 0.3s ease, transform 0.3s ease;
+            margin: 10px;
+        }
+        button:hover {
+            background-color: #6A1B9A;
+            transform: scale(1.05);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+        }
+        .navegacao {
+            position: absolute;
+            top: 50%;
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            transform: translateY(-50%);
+        }
+        .navegacao button {
+            background-color: rgba(255, 255, 255, 0.7);
+            border: none;
+            padding: 10px;
+            cursor: pointer;
+            border-radius: 5px;
+            transition: background-color 0.3s ease;
+        }
+        .navegacao button:hover {
+            background-color: rgba(255, 255, 255, 1);
+        }
+        .indicadores {
+            display: flex;
+            justify-content: center;
+            margin-top: 10px;
+        }
+        .indicadores span {
+            height: 12px;
+            width: 12px;
+            margin: 0 6px;
+            border-radius: 50%;
+            background-color: #ffffff;
+            opacity: 0.6;
+            cursor: pointer;
+            transition: opacity 0.3s, transform 0.3s;
+        }
+        .indicadores span:hover {
+            transform: scale(1.2);
+        }
+        .indicadores .active {
+            opacity: 1;
+        }
+        /* Estilos para dispositivos menores */
+        @media (max-width: 480px) {
+            body {
+                padding: 10px;
+            }
+            h1 {
+                font-size: 2em;
+            }
+            .mensagem {
+                font-size: 1.2em;
+            }
+            .carrossel {
+                max-width: 95%;
+            }
+            button {
+                padding: 10px 20px;
+                font-size: 0.9em;
+            }
+        }
+        .dialogo {
+            background-color: rgba(0, 0, 0, 0.9);
+            color: #D5006D;
+            border-radius: 10px;
+            padding: 20px;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 10;
+            display: none;
+        }
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 100;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0, 0, 0, 0.7);
+            justify-content: center;
+            align-items: center;
+            animation: fadeIn 0.3s forwards;
+        }
+        .modal-content {
+            background-color: #D5006D;
+            border-radius: 10px;
+            padding: 20px;
+            text-align: center;
+            color: #ffffff;
+            font-size: 1.5em;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        }
+        .close {
+            background-color: #6A1B9A;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-top: 20px;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+    </style>
+</head>
+<body>
+
+    <div id="inicial">
+        <h1>Uma Mensagem Especial para Você</h1>
+        <button onclick="perguntar()">Clique para Revelar Mais!</button>
+    </div>
+
+    <div id="mensagemTela" class="hidden">
+        <div class="container">
+            <div class="carrossel">
+                <div class="fotos" id="fotosContainer">
+                    <img src="foto1.jpeg" alt="Foto 1">
+                    <img src="foto2.jpeg" alt="Foto 2">
+                    <img src="foto3.jpeg" alt="Foto 3">
+                    <img src="foto4.jpeg" alt="Foto 4">
+                    <img src="foto5.jpeg" alt="Foto 5">
+                    <img src="foto6.jpeg" alt="Foto 6">
+                    <img src="foto7.jpeg" alt="Foto 7">
+                    <img src="foto8.jpeg" alt="Foto 8">
+                </div>
+                <div class="navegacao">
+                    <button aria-label="Foto anterior" onclick="mudarFoto(-1)">&#10094;</button>
+                    <button aria-label="Próxima foto" onclick="mudarFoto(1)">&#10095;</button>
+                </div>
+            </div>
+            <div class="indicadores">
+                <span class="active" onclick="mudarFoto(0)"></span>
+                <span onclick="mudarFoto(1)"></span>
+                <span onclick="mudarFoto(2)"></span>
+            </div>
+            <h1>Meu amor,</h1>
+            <div class="mensagem" id="mensagem">
+                Eu só queria te dizer que você é a mistura perfeita de todas as coisas que eu precisava na minha vida: amor, carinho e aquele jeitinho que só você tem de me fazer rir até das coisas mais bobas.<br><br>
+                Estar com você é como ganhar na loteria, só que muito melhor, porque na loteria o prêmio acaba, e com você o prêmio é eterno. Você é minha sorte grande, minha paz e também meu caos gostoso (porque você sempre dá um jeito de bagunçar meu coração do jeito certo).<br><br>
+                Obrigado por cuidar de mim porque esse ano foi complicadinho e mesmo assim você não me abandonou em nenhum momento.<br><br>
+                Obrigada por existir e por ser minha pessoa favorita.
+            </div>
+            <input type="file" id="fotoInput" accept="image/*" onchange="adicionarFoto()" />
+        </div>
+    </div>
+
+    <div id="dialogo" class="dialogo">
+        <p>Você quer ver?</p>
+        <button onclick="irParaMensagem()">Sim</button>
+        <button onclick="nao()">Não</button>
+        <button onclick="talvez()">Talvez</button>
+    </div>
+
+    <div id="modal" class="modal">
+        <div class="modal-content">
+            <p>Talvez uma porra, abre logo, vá! 😠</p>
+            <button class="close" onclick="fecharModal()">Fechar</button>
+        </div>
+    </div>
+
+    <script>
+        let indiceFoto = 0;
+
+        function perguntar() {
+            document.getElementById("dialogo").style.display = "block";
+        }
+
+        function irParaMensagem() {
+            document.getElementById("inicial").classList.add("hidden");
+            document.getElementById("dialogo").style.display = "none";
+            document.getElementById("mensagemTela").classList.remove("hidden");
+            document.getElementById("mensagem").style.opacity = 1;
+            atualizarCarrossel();
+        }
+
+        function nao() {
+            document.getElementById("dialogo").style.display = "none";
+            window.open("https://www.youtube.com/shorts/N9zgRln72Uw", "_blank");
+        }
+
+        function talvez() {
+            document.getElementById("dialogo").style.display = "none";
+            document.getElementById("modal").style.display = "flex";
+        }
+
+        function fecharModal() {
+            document.getElementById("modal").style.display = "none";
+        }
+
+        function mudarFoto(direcao) {
+            const fotos = document.querySelectorAll("#fotosContainer img");
+            if (direcao === 1 && indiceFoto === fotos.length - 1) {
+                indiceFoto = 0;
+            } else {
+                indiceFoto = (indiceFoto + direcao + fotos.length) % fotos.length;
+            }
+            atualizarCarrossel();
+            atualizarIndicadores();
+        }
+
+        function atualizarCarrossel() {
+            const fotos = document.querySelector("#fotosContainer");
+            const larguraFoto = document.querySelector(".carrossel").offsetWidth;
+            fotos.style.transform = `translateX(-${indiceFoto * larguraFoto}px)`;
+        }
+
+        function atualizarIndicadores() {
+            const indicadores = document.querySelectorAll('.indicadores span');
+            indicadores.forEach((indicator, index) => {
+                indicator.classList.toggle('active', index === indiceFoto);
+            });
+        }
+
+        function adicionarFoto() {
+            const input = document.getElementById("fotoInput");
+            const container = document.getElementById("fotosContainer");
+
+            if (input.files) {
+                const file = input.files[0];
+                const reader = new FileReader();
+
+                reader.onload = function (e) {
+                    const img = document.createElement("img");
+                    img.src = e.target.result;
+                    container.appendChild(img);
+                }
+
+                reader.readAsDataURL(file);
+                input.value = '';
+            }
+        }
+    </script>
+
+</body>
+</html>
